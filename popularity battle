@@ -1,0 +1,103 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define totalcandidates 16
+#define groupsize 4
+
+typedef struct {
+    char CandidateName[100];
+    char CandidateTagline[200];
+}Candidate;
+
+void randomize(Candidate candidates[], int count) {
+    for (int i = count - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+
+        Candidate temp = candidates[i];
+        candidates[i] = candidates[j];
+        candidates[j] = temp;
+    }
+}
+
+Candidate voting(Candidate candidates[]) {
+    int choice;
+
+    printf("\n------------------------------\n");
+
+    for (int i = 0; i < 4; i++) {
+        printf("%d. %s\n", i + 1, candidates[i].CandidateName);
+        printf("   \"%s\"\n\n", candidates[i].CandidateTagline);
+    }
+
+    do {
+        printf("Vote (1-4): ");
+        scanf("%d", &choice);
+    }while (choice < 1 || choice > 4);
+
+    return candidates[choice - 1];
+}
+
+int main()
+{
+    srand(time(NULL));
+    
+    Candidate candidates[totalcandidates] = {
+    {"Madeline", "You need female!"},
+    {"Peely", "Bananas belong at the top!"},
+    {"Wendy's Baconator", "You don't need a lot, you need quality."},
+    {"Freddy Fazbear", "I can only rule for four years, but you'll want it to be five."},
+    {"Myself", "But is it referring to the program or the programmer?"},
+    {"Nicki Minaj", "I'm already Queen of Rap, but you can make me Queen of America too."},
+    {"Barbie", "Let me make this my barbie world."},
+    {"Monika", "Just Monika."},
+    {"Kendrick Lamar", "I'm HUMBLE, Rich Spirited, and Alright."},
+    {"Bacon", "I'm shakin."},
+    {"Samuel", "Programming a new future."},
+    {"Toilet", "Flushing the bad out."},
+    {"Donald Trump", "Making America great again."},
+    {"Bug", "I'm not a bug, I'm a feature!"},
+    {"The Moon", "A president you can actually look up to."},
+    {"SpongeBob", "I'm ready, promotion!"},
+    };
+
+    Candidate winners[4];
+
+    randomize(candidates, totalcandidates);
+
+    printf("------------------------------\n");
+    printf("          QUALIFIERS\n");
+    printf("------------------------------\n");
+
+    // makes the four qualifier matches
+    for (int group = 0; group < 4; group++) {
+        printf("\nGROUP %d\n", group + 1);
+
+        // making a temperary group for each match
+        Candidate QualifierCandidates[4];
+
+        for (int i = 0; i < 4; i++) {
+            QualifierCandidates[i] = candidates[group * 4 + i];
+        }
+
+        winners[group] = voting(QualifierCandidates);
+
+        printf("\n%s advances to the final!\n", winners[group].CandidateName);
+    }
+
+    // makes the finale
+    printf("\n------------------------------\n");
+    printf("            FINALE\n");
+    printf("------------------------------\n");
+
+    Candidate champion = voting(winners);
+
+    printf("\n------------------------------\n");
+    printf("    WE HAVE OUR PRESIDENT!\n");
+    printf("------------------------------\n");
+
+    printf("%s\n", champion.CandidateName);
+    printf("\"%s\"\n", champion.CandidateTagline);
+
+    return 0;
+}
